@@ -1,0 +1,37 @@
+-- Basic Variables
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+local hitboxSize = 1 -- Default size
+local hitboxEnabled = false -- Toggle state
+
+-- Function to Update Hitbox
+function UpdateHitbox()
+    for _, player in pairs(Players:GetPlayers()) do
+        -- Target other players' characters
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = player.Character.HumanoidRootPart
+            
+            if hitboxEnabled then
+                -- Expand Hitbox: size 1 to 100
+                hrp.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+                hrp.Transparency = 0.5 -- Semi-transparent for visibility
+                hrp.BrickColor = BrickColor.new("Really blue")
+                hrp.CanCollide = false
+            else
+                -- Reset to Default size
+                hrp.Size = Vector3.new(2, 2, 1) 
+                hrp.Transparency = 1
+                hrp.CanCollide = true
+            end
+        end
+    end
+end
+
+-- Continuous update loop
+RunService.RenderStepped:Connect(UpdateHitbox)
+
+-- UI Connection Examples (Place inside your Button/TextBox events)
+-- On/Off Toggle: hitboxEnabled = not hitboxEnabled
+-- Set Size: hitboxSize = math.clamp(tonumber(TextBox.Text) or 1, 1, 100)
